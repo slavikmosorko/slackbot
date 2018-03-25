@@ -21,7 +21,7 @@ public class BotAnswerServiceImpl implements BotAnswerService {
     private static final Logger logger = LoggerFactory.getLogger(SlackBotController.class);
 
     @Value("${endConversationWord}")
-    private String END_CONVERSATION_WORD = "end";
+    private String END_CONVERSATION_WORD;
     @Value("${byeMessage}")
     private String BYE_MESSAGE;
     @Value("${errorMessage}")
