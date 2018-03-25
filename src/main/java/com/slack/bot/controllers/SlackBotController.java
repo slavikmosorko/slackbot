@@ -1,6 +1,6 @@
 package com.slack.bot.controllers;
 
-import com.slack.bot.services.IBotAnswerService;
+import com.slack.bot.services.BotAnswerService;
 import me.ramswaroop.jbot.core.slack.Bot;
 import me.ramswaroop.jbot.core.slack.Controller;
 import me.ramswaroop.jbot.core.slack.EventType;
@@ -13,13 +13,13 @@ import org.springframework.web.socket.WebSocketSession;
 @Component
 public class SlackBotController extends Bot {
 
-    private IBotAnswerService botAnswerService;
+    private BotAnswerService botAnswerService;
 
     @Value("${slackBotToken}")
     private String slackToken;
 
     @Autowired
-    public SlackBotController(IBotAnswerService botAnswerService) {
+    public SlackBotController(BotAnswerService botAnswerService) {
         this.botAnswerService = botAnswerService;
     }
 
@@ -33,14 +33,9 @@ public class SlackBotController extends Bot {
         return this;
     }
 
-    @Controller(events = {EventType.DIRECT_MENTION, EventType.DIRECT_MESSAGE}, next = "sendAnswer")
-    public void sendAnswersList(WebSocketSession session, Event event) {
-        botAnswerService.sendQuestionsList(slackService, this, session, event);
-    }
-
     @Controller(events = {EventType.DIRECT_MENTION, EventType.DIRECT_MESSAGE})
-    public void sendAnswer(WebSocketSession session, Event event) {
-        botAnswerService.sendAnswer(slackService, this, session, event);
+    public void sendAnswers(WebSocketSession session, Event event) {
+        botAnswerService.sendAnswers(slackService, this, session, event);
     }
 
 }
