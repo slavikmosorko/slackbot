@@ -58,7 +58,7 @@ public class BotAnswerServiceImpl implements BotAnswerService {
             }
         } catch (Exception e) {
             bot.reply(session, event, new Message(ERROR_MESSAGE));
-            logger.error("Cant parse " + event.getText());
+            logger.warn("Cant parse " + event.getText());
             return;
         }
 
