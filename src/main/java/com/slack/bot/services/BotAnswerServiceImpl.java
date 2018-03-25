@@ -10,6 +10,7 @@ import me.ramswaroop.jbot.core.slack.models.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -19,9 +20,12 @@ import java.util.List;
 public class BotAnswerServiceImpl implements BotAnswerService {
     private static final Logger logger = LoggerFactory.getLogger(SlackBotController.class);
 
-    private final String END_CONVERSATION = "end";
-    private final String BYE_MESSAGE = "Bye:wave:";
-    private final String ERROR_MESSAGE = "I don't understand you, if you want end this conversation type END or repeat your choice correctly.";
+    @Value("${endConversationWord}")
+    private String END_CONVERSATION_WORD = "end";
+    @Value("${byeMessage}")
+    private String BYE_MESSAGE;
+    @Value("${errorMessage}")
+    private String ERROR_MESSAGE;
 
     private UserStageService userStageService;
     private AnswerRepository answerRepository;
@@ -35,7 +39,7 @@ public class BotAnswerServiceImpl implements BotAnswerService {
     @Override
     public void sendAnswers(SlackService slackService, Bot bot, WebSocketSession session, Event event) {
         if (bot.isConversationOn(event)) {
-            if (END_CONVERSATION.equals(event.getText().toLowerCase())) {
+            if (END_CONVERSATION_WORD.equals(event.getText().toLowerCase())) {
                 userStageService.saveUserStage(0, event.getUserId());
                 bot.reply(session, event, new Message(BYE_MESSAGE));
                 bot.stopConversation(event);
