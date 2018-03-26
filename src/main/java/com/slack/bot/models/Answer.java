@@ -2,6 +2,7 @@ package com.slack.bot.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "answer")
@@ -52,5 +53,22 @@ public class Answer implements Serializable {
 
     public void setAnswerCoontent(String answerCoontent) {
         this.answerCoontent = answerCoontent;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Answer answer = (Answer) o;
+        return answerStageNumber == answer.answerStageNumber &&
+                answerNumber == answer.answerNumber &&
+                Objects.equals(id, answer.id) &&
+                Objects.equals(answerCoontent, answer.answerCoontent);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, answerStageNumber, answerNumber, answerCoontent);
     }
 }
