@@ -39,7 +39,7 @@ public class BotAnswerServiceImpl implements BotAnswerService {
     @Override
     public void sendAnswers(SlackService slackService, Bot bot, WebSocketSession session, Event event) {
         if (bot.isConversationOn(event)) {
-            if (END_CONVERSATION_WORD.equals(event.getText().toLowerCase())) {
+            if (END_CONVERSATION_WORD.equals(event.getText().toUpperCase())) {
                 userStageService.saveUserStage(0, event.getUserId());
                 bot.reply(session, event, new Message(BYE_MESSAGE));
                 bot.stopConversation(event);
