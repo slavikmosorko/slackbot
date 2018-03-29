@@ -22,6 +22,8 @@ public class BotAnswerServiceImpl implements BotAnswerService {
 
     @Value("${endConversationWord}")
     private String END_CONVERSATION_WORD;
+    @Value("${endConversationWord}")
+    private String PREVIOUS_CONVERSATION_WORD;
     @Value("${byeMessage}")
     private String BYE_MESSAGE;
     @Value("${errorMessage}")
@@ -38,6 +40,8 @@ public class BotAnswerServiceImpl implements BotAnswerService {
 
     @Override
     public void sendAnswers(SlackService slackService, Bot bot, WebSocketSession session, Event event) {
+        int userStage = userStageService.getUserStage(event.getUserId());
+
         if (bot.isConversationOn(event)) {
             if (END_CONVERSATION_WORD.equals(event.getText().toUpperCase())) {
                 userStageService.saveUserStage(0, event.getUserId());
@@ -45,11 +49,15 @@ public class BotAnswerServiceImpl implements BotAnswerService {
                 bot.stopConversation(event);
                 return;
             }
+            if (PREVIOUS_CONVERSATION_WORD.equals(event.getText().toUpperCase()) && userStage > 0) {
+                userStageService.saveUserStage(userStage - 1, event.getUserId());
+                userStage--;
+                return;
+            }
         } else {
             bot.startConversation(event, "sendAnswers");
         }
 
-        int userStage = userStageService.getUserStage(event.getUserId());
         int answerNumber = 0;
 
         try {
