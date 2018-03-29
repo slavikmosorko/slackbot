@@ -22,7 +22,7 @@ public class BotAnswerServiceImpl implements BotAnswerService {
 
     @Value("${endConversationWord}")
     private String END_CONVERSATION_WORD;
-    @Value("${endConversationWord}")
+    @Value("${previousConversationWord}")
     private String PREVIOUS_CONVERSATION_WORD;
     @Value("${byeMessage}")
     private String BYE_MESSAGE;
@@ -50,8 +50,8 @@ public class BotAnswerServiceImpl implements BotAnswerService {
                 return;
             }
             if (PREVIOUS_CONVERSATION_WORD.equals(event.getText().toUpperCase()) && userStage > 0) {
-                userStageService.saveUserStage(userStage - 1, event.getUserId());
                 userStage--;
+                userStageService.saveUserStage(userStage, event.getUserId());
                 return;
             }
         } else {
